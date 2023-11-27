@@ -5,4 +5,5 @@ CREATE TABLE warriors  (
     name VARCHAR (255) NOT NULL
 );
 
+
 SELECT * FROM warriors;
