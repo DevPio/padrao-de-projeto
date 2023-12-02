@@ -58,7 +58,6 @@ services:
 volumes:
   dbtuto:
     external: true
-# assinado
 networks:
   nodenetwork:
     driver: bridge
