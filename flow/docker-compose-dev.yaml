@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: app
+    entrypoint:
+      - ./start.sh
+
+    tty: true
+    build:
+      context: ./app
+
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - "3000:3000"
+    networks:
+      - nodenetwork
+    depends_on:
+      - postgres
+      - mongo
+
+  postgres:
+    build:
+      context: ./postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=heroes
+      - PGDATA='/data/postgres-tuto'
+
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - dbtuto:/data/postgres-tuto
+    networks:
+      - nodenetwork
+
+  mongo:
+    container_name: mongodb
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    command: mongod --replSet rs1 --port 27022 --bind_ip_all
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=luccas
+      - MONGO_INITDB_ROOT_PASSWORD=12345
+      - MONGO_INITDB_DATABASE=heroes
+
+    depends_on:
+      - postgres
+    networks:
+      - nodenetwork
+
+volumes:
+  dbtuto:
+    external: true
+networks:
+  nodenetwork:
+    driver: bridge
