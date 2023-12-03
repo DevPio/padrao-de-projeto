@@ -54,7 +54,7 @@ services:
       - postgres
     networks:
       - nodenetwork
-
+# assinado
 volumes:
   dbtuto:
     external: true
